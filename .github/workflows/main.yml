@@ -41,23 +41,21 @@ jobs:
           script: |
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/<NAME_KEY_DARI_ASPRAK>
-            echo "Cek folder project";
-            [ ! -d "${HOME}/senpro/<NID>/modul02/senpro-github-action" ] &&
-            echo "Repository belum ada. Cloning...";
-            mkdir -p ~/senpro/<NID>/modul02;
-            cd ~/senpro/<NID>/modul02;
-            git clone <<LINK_REPOSITORY_FORK>>;
-            cd ~/senpro/<NID>/modul02/senpro-github-action;
-            echo "Install Package dan Build Project";
-            npm install;
-            npm run build;
-            } ||
-            {
-            echo "Repository sudah ada. Building...";
-            cd ~/senpro/<NID>/modul02/senpro-github-action;
-            git restore .;
-            git pull origin main;
-            echo "Install Package dan Build Project";
-            npm install;
-            npm run build;
-            }
+            if [ ! -d "${HOME}/senpro/<NID>/modul02/senpro-github-action" ]; then
+              echo "Repository belum ada. Cloning..."
+              mkdir -p ~/senpro/<NID>/modul02
+              cd ~/senpro/<NID>/modul02
+              git clone <<LINK_REPOSITORY_FORK>>
+              cd ~/senpro/<NID>/modul02/senpro-github-action
+              echo "Install Package dan Build Project"
+              npm install
+              npm run build
+            else
+              echo "Repository sudah ada. Building..."
+              cd ~/senpro/<NID>/modul02/senpro-github-action
+              git restore .
+              git pull origin main
+              echo "Install Package dan Build Project"
+              npm install
+              npm run build
+            fi
